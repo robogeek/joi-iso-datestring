@@ -1,0 +1,27 @@
+{
+  "name": "joi-iso-datestring",
+  "version": "1.0.0",
+  "description": "Joi validator for ISO dates/times",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "npx tsc",
+    "watch": "npx tsc -w"
+  },
+  "keywords": [
+    "iso8601",
+    "date",
+    "joi",
+    "validation",
+    "validator"
+  ],
+  "author": "David Herron <david@davidherron.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "iso-datestring-validator": "^2.2.2"
+  }
+}
