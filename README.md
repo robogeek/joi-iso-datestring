@@ -56,6 +56,10 @@ Validation is handled as so:
 const joiIsoDate = Joi.isoDate();
 const result = joiIsoDate.validate('2023-12-22');
 
+// ISO Date Slash
+const joiIsoDate = Joi.isoDate().separator('/');
+const result = joiIsoDate.validate('2023/12/22');
+
 // ISO Time
 const joiIsoTime = Joi.isoTime();
 const result = joiIsoTime.validate('23:26:00');
@@ -67,6 +71,10 @@ const result = joiIsoDateTime.validate('2023-12-22T23:26:00Z');
 // ISO YearMonth
 const joiIsoYearMonth = Joi.isoYearMonth();
 const result = joiIsoYearMonth.validate('2023-12');
+
+// ISO YearMonth with slashes
+const joiIsoYearMonthSlashes = Joi.isoYearMonth().separator('/');
+const result = joiIsoYearMonthSlashes.validate('2023/12');
 ```
 
 In Joi, the `result` is an object where `result.error` indicates an error, and `result.value` contains the resulting value.

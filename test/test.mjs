@@ -2,10 +2,11 @@
 import { assert } from 'chai';
 import _Joi from 'joi';
 import {
+    default as isoDateString,
     isoDate, isoDateTime, isoTime, isoYearMonth
 } from '../dist/index.js';
 
-const Joi = _Joi
+const Joi = _Joi // .extend(isoDateString)
     .extend(isoDate)
     .extend(isoDateTime)
     .extend(isoTime)
@@ -200,6 +201,19 @@ const dataDates = [
 
 ];
 
+const dataDatesSlash = [
+
+    // This is meant to handle isValidDate(dateString, '/')
+    [ 'YYYY/MM/DD', '2023/12/21', '/' ],
+    [ 'YYYY/MM/DD', '0001/01/01', '/' ],
+    [ 'YYYY/MM/DD', '1001/01/01', '/' ],
+    [ 'YYYY/MM/DD', '2001/01/01', '/' ],
+    [ 'YYYY/MM/DD', '3001/01/01', '/' ],
+    [ 'YYYY/MM/DD', '4001/01/01', '/' ],
+    [ 'YYYY/MM/DD', '5001/01/01', '/' ],
+
+]
+
 const dataBadDates = [
     [ 'YYYY-MM-DD', '33333-222-66' ],
 
@@ -234,6 +248,45 @@ describe('DATE', function() {
             assert.isString(result.value);
             assert.equal(result.value, td[1]);
         });
+
+        // it(`should match string ${td[0]} -- ${td[1]}`, function() {
+        //     const joiIsoDate = Joi.string().isoDate();
+        //     const result = joiIsoDate.validate(td[1]);
+        //     if (result.error) {
+        //         console.log(result.error);
+        //         console.log(result.error.context);
+        //     }
+        //     assert.notOk(result.error);
+        //     assert.isString(result.value);
+        //     assert.equal(result.value, td[1]);
+        // });
+    }
+
+    for (const td of dataDatesSlash) {
+
+        it(`should match ${td[0]} -- ${td[1]}`, function() {
+            const joiIsoDateSlash = Joi.isoDate().separator('/');
+            const result = joiIsoDateSlash.validate(td[1]);
+            if (result.error) {
+                console.log(result.error);
+                console.log(result.error.context);
+            }
+            assert.notOk(result.error);
+            assert.isString(result.value);
+            assert.equal(result.value, td[1]);
+        });
+
+        // it(`should match string ${td[0]} -- ${td[1]}`, function() {
+        //     const joiIsoDate = Joi.string().isoDate();
+        //     const result = joiIsoDate.validate(td[1]);
+        //     if (result.error) {
+        //         console.log(result.error);
+        //         console.log(result.error.context);
+        //     }
+        //     assert.notOk(result.error);
+        //     assert.isString(result.value);
+        //     assert.equal(result.value, td[1]);
+        // });
     }
 
     for (const td of dataBadDates) {
@@ -249,6 +302,18 @@ describe('DATE', function() {
             assert.equal(result.value, td[1]);
 
         });
+
+        // it(`should not match string ${td[0]} -- ${td[1]}`, function() {
+        //     const joiIsoDate = Joi.string().isoDate();
+        //     const result = joiIsoDate.validate(td[1]);
+        //     // console.log(result);
+        //     // console.log(result.error);
+        //     assert.isOk(result.error);
+        //     assert.isOk(result.error.details[0].message.indexOf(`\`${td[1]}\` is not a valid ISO Date string`) >= 0);
+        //     assert.isString(result.value);
+        //     assert.equal(result.value, td[1]);
+
+        // });
     }
     
 });
@@ -420,6 +485,35 @@ const dataTimes = [
 
 ];
 
+const dateTimesNoSep = [
+
+    // All these fail
+    [ 'hhmmss', '000000' ],
+    [ 'hhmmss', '011000' ],
+    [ 'hhmmss', '022000' ],
+    [ 'hhmmss', '033000' ],
+    [ 'hhmmss', '044000' ],
+    [ 'hhmmss', '055000' ],
+    [ 'hhmmss', '065200' ],
+    [ 'hhmmss', '070100' ],
+    [ 'hhmmss', '080200' ],
+    [ 'hhmmss', '090300' ],
+    [ 'hhmmss', '100400' ],
+    [ 'hhmmss', '110500' ],
+    [ 'hhmmss', '120600' ],
+    [ 'hhmmss', '130700' ],
+    [ 'hhmmss', '140800' ],
+    [ 'hhmmss', '150900' ],
+    [ 'hhmmss', '160010' ],
+    [ 'hhmmss', '170020' ],
+    [ 'hhmmss', '180030' ],
+    [ 'hhmmss', '190040' ],
+    [ 'hhmmss', '200050' ],
+    [ 'hhmmss', '210001' ],
+    [ 'hhmmss', '220002' ],
+    [ 'hhmmss', '230003' ],
+
+]
 const dataBadTimes = [
 
     [ 'hh:mm:ss.sss', '05:60:00.000' ],
@@ -447,7 +541,46 @@ describe('TIME', function() {
             assert.isString(result.value);
             assert.equal(result.value, td[1]);
         });
+
+        // it(`should match string ${td[0]} -- ${td[1]}`, function() {
+        //     const joiIsoTime = Joi.string().isoTime();
+        //     const result = joiIsoTime.validate(td[1]);
+        //     if (result.error) {
+        //         console.log(result.error);
+        //         console.log(result.error.details[0]);
+        //     }
+        //     assert.notOk(result.error);
+        //     assert.isString(result.value);
+        //     assert.equal(result.value, td[1]);
+        // });
+
     }
+
+    // for (const td of dateTimesNoSep) {
+
+    //     it(`should match no separator ${td[0]} -- ${td[1]}`, function() {
+    //         const joiIsoTime = Joi.isoTime().separator('');
+    //         const result = joiIsoTime.validate(td[1]);
+    //         if (result.error) {
+    //             console.log(result.error);
+    //             console.log(result.error.details[0]);
+    //         }
+    //         assert.notOk(result.error);
+    //         assert.isString(result.value);
+    //         assert.equal(result.value, td[1]);
+    //     });
+
+    //     it(`should not match nosep ${td[0]} -- ${td[1]}`, function() {
+    //         const joiIsoDate = Joi.isoTime();
+    //         const result = joiIsoDate.validate(td[1]);
+    //         // console.log(result);
+    //         // console.log(result.error);
+    //         assert.isOk(result.error);
+    //         assert.isOk(result.error.details[0].message.indexOf(td[1]) >= 0);
+    //         assert.isString(result.value);
+    //         assert.equal(result.value, td[1]);
+    //     });
+    // }
 
     for (const td of dataBadTimes) {
 
@@ -462,6 +595,18 @@ describe('TIME', function() {
             assert.equal(result.value, td[1]);
 
         });
+
+        // it(`should not match string ${td[0]} -- ${td[1]}`, function() {
+        //     const joiIsoDate = Joi.string().isoTime();
+        //     const result = joiIsoDate.validate(td[1]);
+        //     // console.log(result);
+        //     // console.log(result.error);
+        //     assert.isOk(result.error);
+        //     assert.isOk(result.error.details[0].message.indexOf(td[1]) >= 0);
+        //     assert.isString(result.value);
+        //     assert.equal(result.value, td[1]);
+
+        // });
     }
 
 });
@@ -506,6 +651,21 @@ describe('DATE-TIME', function() {
             });
 
 
+            // it(`should match string ${td[0]}T${tt[0]} -- ${td[1]}T${tt[1]}`, function() {
+            //     const val = `${td[1]}T${tt[1]}`;
+            //     const joiIsoDateTime = Joi.string().isoDateTime();
+            //     const result = joiIsoDateTime.validate(val);
+            //     if (result.error) {
+            //         console.log(val);
+            //         console.log(result.error);
+            //         console.log(result.error.details[0]);
+            //     }
+            //     assert.notOk(result.error);
+            //     assert.isString(result.value);
+            //     assert.equal(result.value, val);
+            // });
+
+
             it(`should match ${td[0]}T${tt[0]}Z -- ${td[1]}T${tt[1]}Z`, function() {
                 const val = `${td[1]}T${tt[1]}Z`;
                 const joiIsoDateTime = Joi.isoDateTime();
@@ -519,6 +679,20 @@ describe('DATE-TIME', function() {
                 assert.isString(result.value);
                 assert.equal(result.value, val);
             });
+
+            // it(`should match string ${td[0]}T${tt[0]}Z -- ${td[1]}T${tt[1]}Z`, function() {
+            //     const val = `${td[1]}T${tt[1]}Z`;
+            //     const joiIsoDateTime = Joi.string().isoDateTime();
+            //     const result = joiIsoDateTime.validate(val);
+            //     if (result.error) {
+            //         console.log(val);
+            //         console.log(result.error);
+            //         console.log(result.error.details[0]);
+            //     }
+            //     assert.notOk(result.error);
+            //     assert.isString(result.value);
+            //     assert.equal(result.value, val);
+            // });
 
             it(`should match ${td[0]}T${tt[0]}+00:00 -- ${td[1]}T${tt[1]}+00:00`, function() {
                 const val = `${td[1]}T${tt[1]}+00:00`;
@@ -534,6 +708,20 @@ describe('DATE-TIME', function() {
                 assert.equal(result.value, val);
             });
 
+            // it(`should match string ${td[0]}T${tt[0]}+00:00 -- ${td[1]}T${tt[1]}+00:00`, function() {
+            //     const val = `${td[1]}T${tt[1]}+00:00`;
+            //     const joiIsoDateTime = Joi.string().isoDateTime();
+            //     const result = joiIsoDateTime.validate(val);
+            //     if (result.error) {
+            //         console.log(val);
+            //         console.log(result.error);
+            //         console.log(result.error.details[0]);
+            //     }
+            //     assert.notOk(result.error);
+            //     assert.isString(result.value);
+            //     assert.equal(result.value, val);
+            // });
+
             it(`should match ${td[0]}T${tt[0]}+10:30 -- ${td[1]}T${tt[1]}+10:30`, function() {
                 const val = `${td[1]}T${tt[1]}+10:30`;
                 const joiIsoDateTime = Joi.isoDateTime();
@@ -547,6 +735,20 @@ describe('DATE-TIME', function() {
                 assert.isString(result.value);
                 assert.equal(result.value, val);
             });
+
+            // it(`should match string ${td[0]}T${tt[0]}+10:30 -- ${td[1]}T${tt[1]}+10:30`, function() {
+            //     const val = `${td[1]}T${tt[1]}+10:30`;
+            //     const joiIsoDateTime = Joi.string().isoDateTime();
+            //     const result = joiIsoDateTime.validate(val);
+            //     if (result.error) {
+            //         console.log(val);
+            //         console.log(result.error);
+            //         console.log(result.error.details[0]);
+            //     }
+            //     assert.notOk(result.error);
+            //     assert.isString(result.value);
+            //     assert.equal(result.value, val);
+            // });
 
             // negative time zone offsets seem to not work
             //
@@ -585,6 +787,24 @@ const dataYearMonths = [
 
 ];
 
+const dataYearMonthsSlash = [
+
+    [ 'YYYY-MM', '2023/12' ],
+    [ 'YYYY-MM', '0001/01' ],
+    [ 'YYYY-MM', '1001/02' ],
+    [ 'YYYY-MM', '2001/03' ],
+    [ 'YYYY-MM', '3001/04' ],
+    [ 'YYYY-MM', '4001/05' ],
+    [ 'YYYY-MM', '5001/06' ],
+    [ 'YYYY-MM', '6001/07' ],
+    [ 'YYYY-MM', '7001/08' ],
+    [ 'YYYY-MM', '8001/09' ],
+    [ 'YYYY-MM', '8201/10' ],
+    [ 'YYYY-MM', '8301/11' ],
+    [ 'YYYY-MM', '9999/11' ],
+
+];
+
 const dataBadYearMonths = [
     [ 'YYYY-MM', '223-13' ],
     [ 'YYYY-MM', '2023-5' ],
@@ -609,6 +829,43 @@ describe('YEAR-MONTH', function() {
             assert.isString(result.value);
             assert.equal(result.value, td[1]);
         });
+
+        // it(`should match string ${td[0]} -- ${td[1]}`, function() {
+        //     const joiIsoYearMonth = Joi.string().isoYearMonth();
+        //     const result = joiIsoYearMonth.validate(td[1]);
+        //     if (result.error) {
+        //         console.log(result.error);
+        //         console.log(result.error.details[0]);
+        //     }
+        //     assert.notOk(result.error);
+        //     assert.isString(result.value);
+        //     assert.equal(result.value, td[1]);
+        // });
+    }
+
+    for (const td of dataYearMonthsSlash) {
+
+        it(`should match slashes ${td[0]} -- ${td[1]}`, function() {
+            const joiIsoYearMonthSlash = Joi.isoYearMonth().separator('/');
+            const result = joiIsoYearMonthSlash.validate(td[1]);
+            if (result.error) {
+                console.log(result.error);
+                console.log(result.error.details[0]);
+            }
+            assert.notOk(result.error);
+            assert.isString(result.value);
+            assert.equal(result.value, td[1]);
+        });
+
+        it(`should not match slashes with no separator ${td[0]} -- ${td[1]}`, function() {
+            const joiIsoYearMonthSlash = Joi.isoYearMonth();
+            const result = joiIsoYearMonthSlash.validate(td[1]);
+            assert.isOk(result.error);
+            assert.isOk(result.error.details[0].message.indexOf(td[1]) >= 0);
+            assert.isString(result.value);
+            assert.equal(result.value, td[1]);
+        });
+
     }
 
     for (const td of dataBadYearMonths) {
@@ -624,6 +881,19 @@ describe('YEAR-MONTH', function() {
             assert.equal(result.value, td[1]);
 
         });
+
+        // it(`should not match string ${td[0]} -- ${td[1]}`, function() {
+        //     const joiIsoYearMonth = Joi.string().isoYearMonth();
+        //     const result = joiIsoYearMonth.validate(td[1]);
+        //     // console.log(result);
+        //     // console.log(result.error);
+        //     assert.isOk(result.error);
+        //     assert.isOk(result.error.details[0].message.indexOf(td[1]) >= 0);
+        //     assert.isString(result.value);
+        //     assert.equal(result.value, td[1]);
+
+        // });
+
     }
 
 });
