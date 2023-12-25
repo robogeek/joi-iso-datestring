@@ -100,11 +100,11 @@ import {
  * @param {Object} joi Joi instance provided by Joi
  * @return {Object} Joi plugin object
  */
-export function isoDate (joi: Root): Extension | ExtensionFactory {
+export function isoDate (joi: Root) : Extension | ExtensionFactory {
     return {
         type: 'isoDate',
         base: joi.string(),
-        validate(value, helpers) {
+        validate(value: any, helpers: Joi.CustomHelpers<any>) {
             const separator = helpers.schema.$_getFlag('separator');
             return validateIsoDateString(value, helpers, separator);
             // console.log(`isoDate ${value}`);
@@ -124,14 +124,14 @@ export function isoDate (joi: Root): Extension | ExtensionFactory {
             'isoDate.error': '`{{#value}}` is not a valid ISO Date string'
         },
         rules: {
-            isoDateString: {
-                validate(value, helpers) {
-                    const separator = helpers.schema.$_getFlag('separator');
-                    return validateIsoDateString(value, helpers, separator);
-                }
-            },
+            // isoDateString: {
+            //     validate(value, helpers) {
+            //         const separator = helpers.schema.$_getFlag('separator');
+            //         return validateIsoDateString(value, helpers, separator);
+            //     }
+            // },
             separator: {
-                method: function (enabled = true) {
+                method: function (enabled = true): any {
                     return this.$_setFlag('separator', enabled);
                 }
             }
@@ -265,27 +265,5 @@ export function isoYearMonth (joi: Root): Extension | ExtensionFactory {
             }
         }
 
-        // rules: {
-        //     isoYearMonth: {
-        //         validate(value, helpers) {
-        //             return validateIsoYearMonth(value, helpers);
-        //         }
-        //     }
-        // }
     }
 };
-
-// function validateIsoYearMonth(value: any, helpers: Joi.CustomHelpers<any>) {
-//     // console.log(`isoDate ${value}`);
-//     const isValid = isValidYearMonth(value);
-//     // console.log(`isoDate ${value} ==> ${isValid}`);
-
-//     if (!isValid) {
-//         return {
-//             value,
-//             errors: helpers.error('isoYearMonth.error', { value })
-//         };
-//     }
-
-//     return { value };
-// }
