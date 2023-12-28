@@ -1,7 +1,7 @@
 {
   "name": "joi-iso-datestring",
   "version": "1.0.0",
-  "description": "Joi validator for ISO dates/times",
+  "description": "Joi validators for ISO 8601 Date, Time, DateTime, and YearMonth strings",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/robogeek/joi-iso-datestring.git"
@@ -22,6 +22,7 @@
   "author": "David Herron <david@davidherron.com>",
   "license": "MIT",
   "devDependencies": {
+    "@types/hapi__joi": "^17.1.14",
     "@types/node": "^20.10.5",
     "joi": "^17.11.0",
     "typescript": "^5.3.3"
